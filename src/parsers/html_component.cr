@@ -13,7 +13,7 @@ module Mint
         end
 
         next unless component
-        
+
         ref = start do
           whitespace
           next unless keyword "as"

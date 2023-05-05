@@ -1,15 +1,13 @@
-/* Comment for Status enum. */
-enum Status {
-  Error
-  Ok
+/* Comment for Theme store. */
+store Theme {
+  state darkMode = false
 }
-----------------------------------------------------------------file status.mint
-module Test {
-  fun toString (status : Status) : String {
-    case status {
-      Status::Error => "Error"
-      Status::Ok => "Ok"
-    }
+-----------------------------------------------------------------file store.mint
+component Test {
+  connect Theme exposing { darkMode }
+
+  fun render : Html {
+    <div/>
   }
 }
 ------------------------------------------------------------------file test.mint
@@ -20,7 +18,7 @@ module Test {
     "capabilities": {
       "textDocument": {
         "definition": {
-          "linkSupport": true
+          "linkSupport": false
         }
       }
     }
@@ -35,8 +33,8 @@ module Test {
       "uri": "file://#{root_path}/test.mint"
     },
     "position": {
-      "line": 3,
-      "character": 6
+      "line": 1,
+      "character": 10
     }
   },
   "method": "textDocument/definition"
@@ -45,37 +43,17 @@ module Test {
 {
   "jsonrpc": "2.0",
   "result": {
-    "originSelectionRange": {
-      "start": {
-        "line": 3,
-        "character": 6
-      },
-      "end": {
-        "line": 3,
-        "character": 12
-      }
-    },
-    "targetUri": "file://#{root_path}/status.mint",
-    "targetRange": {
-      "start": {
-        "line": 0,
-        "character": 0
-      },
-      "end": {
-        "line": 4,
-        "character": 1
-      }
-    },
-    "targetSelectionRange": {
+    "range": {
       "start": {
         "line": 1,
-        "character": 5
+        "character": 6
       },
       "end": {
         "line": 1,
         "character": 11
       }
-    }
+    },
+    "uri": "file://#{root_path}/store.mint"
   },
   "id": 1
 }

@@ -10,12 +10,10 @@ module Mint
         if enum_node
           location_link server, node.name, enum_node.name, enum_node
         else
-          record =
-            workspace.ast.records.find(&.name.value.==(node.name.value))
+          return unless record =
+                          workspace.ast.records.find(&.name.value.==(node.name.value))
 
-          if record
-            location_link server, node.name, record.name, record
-          end
+          location_link server, node.name, record.name, record
         end
       end
     end
