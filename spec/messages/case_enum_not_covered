@@ -1,0 +1,38 @@
+enum A {
+  B
+  C
+  /* Comment for D enum option */
+  D
+}
+
+component Main {
+  fun render : String {
+    case (A::B) {
+      A::B => "a"
+      A::C => "c"
+    }
+  }
+}
+--------------------------------------------------------------------------------
+░ TYPE ERROR ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+Not all possibilities of a case expression are covered.
+
+To cover all remaining possibilities create branches for the following options:
+
+  • A::D
+
+Here is the relevant code snippet:
+
+┌──┬ ./spec/messages/case_enum_not_covered:10:5 ───────────────────────────────┐
+│ 6│ }                                                                         │
+│ 7│                                                                           │
+│ 8│ component Main {                                                          │
+│ 9│   fun render : String {                                                   │
+│10│     case (A::B) {                                                         │
+│11│       A::B => "a"                                                         │
+│12│       A::C => "c"                                                         │
+│13│     }                                                                     │
+│14│   }                                                                       │
+│15│ }                                                                         │
+└──┴───────────────────────────────────────────────────────────────────────────┘

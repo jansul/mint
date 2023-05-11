@@ -13,3 +13,29 @@ Dir.glob("./src/messages/**/*").each do |file|
     ERROR_MESSAGES.includes?(basename).should eq(true)
   end
 end
+
+Dir
+  .glob("./spec/messages/**/*")
+  .select! { |file| File.file?(file) }
+  .sort!
+  .each do |file|
+    it file do
+      sample, expected = File.read(file).split("-" * 80)
+
+      begin
+        ast = Mint::Parser.parse(sample, file)
+
+        type_checker = Mint::TypeChecker.new(ast)
+        type_checker.check
+
+        fail "Should raise Mint::Error"
+      rescue error : Mint::Error
+        message = error.to_terminal.to_s.uncolorize
+        begin
+          message.should eq(expected.strip)
+        rescue
+          fail diff(expected, message)
+        end
+      end
+    end
+  end
