@@ -17,15 +17,13 @@ module Mint
       property params : LSP::CompletionParams
       property snippet_support : Bool?
 
-      def completions(node : Ast::Node, global : Bool = false)
+      def completions(node : Ast::Node, workspace : Workspace, global : Bool = false)
         [] of LSP::CompletionItem
       end
 
-      def workspace
-        Mint::Workspace[params.path]
-      end
-
       def execute(server)
+        workspace = server.workspace!
+
         @snippet_support =
           server
             .params
@@ -38,24 +36,24 @@ module Mint
           (workspace.ast.stores +
             workspace.ast.unified_modules +
             workspace.ast.components.select(&.global?))
-            .flat_map { |node| completions(node, global: true) }
+            .flat_map { |node| completions(node, workspace, global: true) }
 
         scope_completions =
           server
             .nodes_at_cursor(params)
-            .flat_map { |node| completions(node) }
+            .flat_map { |node| completions(node, workspace) }
 
         component_completions =
           workspace
             .ast
             .components
-            .map { |node| completion_item(node) }
+            .map { |node| completion_item(node, workspace) }
 
         enum_completions =
           workspace
             .ast
             .enums
-            .flat_map { |node| completions(node) }
+            .flat_map { |node| completions(node, workspace) }
 
         (global_completions +
           component_completions +

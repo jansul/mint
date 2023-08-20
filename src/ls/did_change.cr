@@ -8,7 +8,7 @@ module Mint
           URI.parse(params.text_document.uri)
 
         workspace =
-          Workspace[uri.path.to_s]
+          server.workspace!
 
         workspace.update(params.content_changes.first.text, uri.path)
       end

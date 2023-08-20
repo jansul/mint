@@ -6,6 +6,15 @@ module Mint
       def execute(server)
         server.params = params
 
+        server.workspace = params
+          .try(&.root_uri)
+          .try do |root_uri|
+            workspace_uri = URI.parse(root_uri)
+
+            Workspace.new(workspace_uri.path.to_s)
+              .tap(&.update_cache)
+          end
+
         completion_provider =
           LSP::CompletionOptions.new(
             resolve_provider: true,

@@ -5,11 +5,7 @@ module Mint
       property params : LSP::TextDocumentPositionParams
 
       def execute(server) : Array(LSP::LocationLink) | Array(LSP::Location) | LSP::Location | Nil
-        uri =
-          URI.parse(params.text_document.uri)
-
-        workspace =
-          Workspace[uri.path.to_s]
+        workspace = server.workspace!
 
         unless workspace.error
           stack =

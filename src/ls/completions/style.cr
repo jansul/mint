@@ -12,7 +12,7 @@ module Mint
             label: name)
         end
 
-      def completions(node : Ast::Style) : Array(LSP::CompletionItem)
+      def completions(node : Ast::Style, workspace : Workspace) : Array(LSP::CompletionItem)
         CSS_PROPERTY_COMPLETIONS
       end
     end

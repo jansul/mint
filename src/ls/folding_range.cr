@@ -47,6 +47,9 @@ module Mint
       end
 
       def execute(server)
+        workspace =
+          server.workspace!
+
         unless workspace.error
           server
             .nodes_at_path(params.text_document.path)
@@ -55,10 +58,6 @@ module Mint
         end
 
         ranges
-      end
-
-      private def workspace
-        Workspace[params.text_document.path]
       end
     end
   end

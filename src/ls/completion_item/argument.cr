@@ -1,7 +1,7 @@
 module Mint
   module LS
     class Completion < LSP::RequestMessage
-      def completion_item(node : Ast::Argument) : LSP::CompletionItem
+      def completion_item(node : Ast::Argument, workspace : Workspace) : LSP::CompletionItem
         name =
           node.name.value
 

@@ -1,7 +1,7 @@
 module Mint
   module LS
     class Completion < LSP::RequestMessage
-      def completions(node : Ast::Enum) : Array(LSP::CompletionItem)
+      def completions(node : Ast::Enum, workspace : Workspace) : Array(LSP::CompletionItem)
         node.options.map do |option|
           name =
             "#{node.name.value}::#{option.value.value}"

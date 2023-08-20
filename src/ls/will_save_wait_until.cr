@@ -6,10 +6,10 @@ module Mint
       def execute(server)
         uri =
           URI.parse(params.text_document.uri)
-
+        
         workspace =
-          Workspace[uri.path.to_s]
-
+          server.workspace!
+          
         formatted =
           workspace.format(uri.path.to_s)
 

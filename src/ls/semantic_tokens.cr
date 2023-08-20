@@ -5,11 +5,14 @@ module Mint
       property params : LSP::SemanticTokensParams
 
       def execute(server)
+        workspace =
+          server.workspace!
+
         uri =
           URI.parse(params.text_document.uri)
 
         ast =
-          Workspace[uri.path.to_s][uri.path.to_s]
+          workspace[uri.path.to_s]
 
         # This is used later on to convert the line/column of each token
         input =

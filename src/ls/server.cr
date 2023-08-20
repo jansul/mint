@@ -19,6 +19,12 @@ module Mint
 
       property params : LSP::InitializeParams? = nil
 
+      property workspace : Workspace? = nil
+
+      def workspace! : Workspace 
+        workspace || raise "Language server has not initialized workspace"
+      end
+
       # Logs the given stack.
       def debug_stack(stack : Array(Ast::Node))
         stack.each_with_index do |item, index|
@@ -47,7 +53,7 @@ module Mint
       end
 
       def nodes_at_path(path : String)
-        Mint::Workspace[path]
+        workspace!
           .ast
           .nodes
           .select(&.input.file.==(path))

@@ -3,34 +3,32 @@ module Mint
     class CodeAction < LSP::RequestMessage
       property params : LSP::CodeActionParams
 
-      def actions(node : Ast::Module)
+      def actions(node : Ast::Module, workspace : Workspace)
         [
           ModuleActions.order_entities(node, workspace, params.text_document.uri),
         ]
       end
 
-      def actions(node : Ast::Provider)
+      def actions(node : Ast::Provider, workspace : Workspace)
         [
           ProviderActions.order_entities(node, workspace, params.text_document.uri),
         ]
       end
 
-      def actions(node : Ast::Node)
+      def actions(node : Ast::Node, workspace : Workspace)
         [] of LSP::CodeAction
       end
 
       def execute(server)
+        workspace = server.workspace!
+
         return [] of LSP::CodeAction if workspace.error
 
         server
           .nodes_at_cursor(params)
           .reduce([] of LSP::CodeAction) do |memo, node|
-            memo + actions(node)
+            memo + actions(node, workspace)
           end
-      end
-
-      private def workspace
-        Workspace[params.text_document.path]
       end
     end
   end

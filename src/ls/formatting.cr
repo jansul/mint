@@ -4,11 +4,11 @@ module Mint
       property params : LSP::DocumentFormattingParams
 
       def execute(server)
+        workspace =
+          server.workspace!
+
         uri =
           URI.parse(params.text_document.uri)
-
-        workspace =
-          Workspace[uri.path.to_s]
 
         formatted =
           workspace.format(uri.path.to_s)

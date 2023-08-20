@@ -30,16 +30,8 @@ module Mint
       end
 
       def execute(server)
-        # Get the URI of the text document
-        uri =
-          URI.parse(params.text_document.uri)
-
-        # Get the workspace associated with the text document
-        # this could take a while because the workspace parses
-        # and type checks all of its source files.
-        workspace =
-          Workspace[uri.path.to_s]
-
+        workspace = server.workspace!
+        
         contents =
           if error = workspace.error
             # If the workspace has an error we cannot really
