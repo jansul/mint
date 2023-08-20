@@ -216,6 +216,20 @@ module Mint
       call "change", error
     end
 
+    def rename_file(old_file, new_file)
+      old_path = normalize_path(old_file)
+      new_path = normalize_path(new_file)
+
+      @cache[new_path] = old_path
+      @cache.delete(old_path)
+    end
+
+    def delete_file(old_file, new_file)
+      @cache.delete(old_path)
+
+      update_cache
+    end
+    
     private def normalize_path(file)
       Path[file].normalize.to_s
     end

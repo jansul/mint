@@ -20,6 +20,12 @@ module LSP
       # Capabilities specific to `WorkspaceEdit`s
       @[JSON::Field(key: "workspaceEdit")]
       property workspace_edit : WorkspaceEditClientCapabilities?
+
+      # The client has support for file requests/notifications.
+      # 
+      # @since 3.16.0
+      @[JSON::Field(key: "fileOperations")]
+      property file_operations : FileOperationsClientCapabilities?
     end
 
     include JSON::Serializable

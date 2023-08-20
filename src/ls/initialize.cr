@@ -45,11 +45,26 @@ module Mint
         execute_command_provider =
           LSP::ExecuteCommandOptions.new(commands: %w[])
 
+        file_options =  LSP::FileOperationRegistrationOptions.new(
+          filters: [
+            LSP::FileOperationFilter.new(
+              pattern: LSP::FileOperationPattern.new(
+                glob: "**/*.mint",
+                matches: LSP::FileOperationPatternKind::File
+              )
+            ),
+          ]
+        )
+
         workspace =
           LSP::Workspace.new(
             workspace_folders: LSP::WorkspaceFolders.new(
               change_notifications: false,
-              supported: false))
+              supported: false),
+            file_operations: LSP::FileOperationsServerCapabilities.new(
+              did_rename: file_options,
+              did_delete: file_options
+            ))
 
         semantic_tokens_provider =
           LSP::SemanticTokensOptions.new(
