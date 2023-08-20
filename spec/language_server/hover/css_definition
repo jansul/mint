@@ -10,6 +10,15 @@ component Test {
 ------------------------------------------------------------------file test.mint
 {
   "id": 0,
+  "method": "initialize",
+  "params": {
+    "rootUri": "file://#{root_path}",
+    "capabilities": {}
+  }
+}
+-------------------------------------------------------------------------request
+{
+  "id": 1,
   "method": "textDocument/hover",
   "params": {
     "textDocument": {
@@ -23,7 +32,7 @@ component Test {
 }
 -------------------------------------------------------------------------request
 {
-  "id": 1,
+  "id": 2,
   "method": "textDocument/hover",
   "params": {
     "textDocument": {
@@ -44,7 +53,7 @@ component Test {
       "[MDN Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/background)"
     ]
   },
-  "id": 0
+  "id": 1
 }
 ------------------------------------------------------------------------response
 {
@@ -55,6 +64,6 @@ component Test {
       "[MDN Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/background)"
     ]
   },
-  "id": 1
+  "id": 2
 }
 ------------------------------------------------------------------------response

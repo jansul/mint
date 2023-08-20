@@ -7,8 +7,23 @@ store Test {
 }
 ------------------------------------------------------------------file test.mint
 {
-  "jsonrpc": "2.0",
   "id": 0,
+  "method": "initialize",
+  "params": {
+    "rootUri": "file://#{root_path}",
+    "capabilities": {
+      "textDocument": {
+        "definition": {
+          "linkSupport": true
+        }
+      }
+    }
+  }
+}
+-------------------------------------------------------------------------request
+{
+  "jsonrpc": "2.0",
+  "id": 1,
   "params": {
     "textDocument": {
       "uri": "file://#{root_path}/test.mint"
@@ -24,6 +39,6 @@ store Test {
 {
   "jsonrpc": "2.0",
   "result": null,
-  "id": 0
+  "id": 1
 }
 ------------------------------------------------------------------------response

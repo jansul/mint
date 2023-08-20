@@ -7,6 +7,15 @@ store Test {
 ------------------------------------------------------------------file test.mint
 {
   "id": 0,
+  "method": "initialize",
+  "params": {
+    "rootUri": "file://#{root_path}",
+    "capabilities": {}
+  }
+}
+-------------------------------------------------------------------------request
+{
+  "id": 1,
   "method": "textDocument/hover",
   "params": {
     "textDocument": {
@@ -27,6 +36,6 @@ store Test {
       "Comment for the function test."
     ]
   },
-  "id": 0
+  "id": 1
 }
 ------------------------------------------------------------------------response

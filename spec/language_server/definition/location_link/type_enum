@@ -13,6 +13,7 @@ module Status {
   "id": 0,
   "method": "initialize",
   "params": {
+    "rootUri": "file://#{root_path}",
     "capabilities": {
       "textDocument": {
         "definition": {

@@ -22,8 +22,17 @@ component Test {
 }
 ------------------------------------------------------------------file test.mint
 {
-  "jsonrpc": "2.0",
   "id": 0,
+  "method": "initialize",
+  "params": {
+    "rootUri": "file://#{root_path}",
+    "capabilities": {}
+  }
+}
+-------------------------------------------------------------------------request
+{
+  "jsonrpc": "2.0",
+  "id": 1,
   "params": {
     "textDocument": {
       "uri": "file://#{root_path}/test.mint"
@@ -38,7 +47,7 @@ component Test {
 -------------------------------------------------------------------------request
 {
   "jsonrpc": "2.0",
-  "id": 1,
+  "id": 2,
   "params": {
     "textDocument": {
       "uri": "file://#{root_path}/test.mint"
@@ -53,7 +62,7 @@ component Test {
 -------------------------------------------------------------------------request
 {
   "jsonrpc": "2.0",
-  "id": 2,
+  "id": 3,
   "params": {
     "textDocument": {
       "uri": "file://#{root_path}/test.mint"
@@ -68,7 +77,7 @@ component Test {
 -------------------------------------------------------------------------request
 {
   "jsonrpc": "2.0",
-  "id": 3,
+  "id": 4,
   "params": {
     "textDocument": {
       "uri": "file://#{root_path}/test.mint"
@@ -83,7 +92,7 @@ component Test {
 -------------------------------------------------------------------------request
 {
   "jsonrpc": "2.0",
-  "id": 4,
+  "id": 5,
   "params": {
     "textDocument": {
       "uri": "file://#{root_path}/test.mint"
@@ -96,12 +105,6 @@ component Test {
   "method": "textDocument/definition"
 }
 -------------------------------------------------------------------------request
-{
-  "jsonrpc": "2.0",
-  "result": null,
-  "id": 0
-}
-------------------------------------------------------------------------response
 {
   "jsonrpc": "2.0",
   "result": null,
@@ -124,5 +127,11 @@ component Test {
   "jsonrpc": "2.0",
   "result": null,
   "id": 4
+}
+------------------------------------------------------------------------response
+{
+  "jsonrpc": "2.0",
+  "result": null,
+  "id": 5
 }
 ------------------------------------------------------------------------response

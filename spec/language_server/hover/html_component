@@ -14,6 +14,15 @@ component Test {
 ------------------------------------------------------------------file test.mint
 {
   "id": 0,
+  "method": "initialize",
+  "params": {
+    "rootUri": "file://#{root_path}",
+    "capabilities": {}
+  }
+}
+-------------------------------------------------------------------------request
+{
+  "id": 1,
   "method": "textDocument/hover",
   "params": {
     "textDocument": {
@@ -35,6 +44,6 @@ component Test {
       "**size : String = \"small\"**\n"
     ]
   },
-  "id": 0
+  "id": 1
 }
 ------------------------------------------------------------------------response
