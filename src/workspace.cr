@@ -44,7 +44,7 @@ module Mint
           .tap(&.watch)
     end
 
-    alias ChangeProc = Proc(Ast | Error, Nil)
+    alias ChangeProc = Proc(String, Ast | Error, Nil)
 
     @event_handlers = {} of String => Array(ChangeProc)
     @cache = {} of String => Ast
@@ -131,7 +131,7 @@ module Mint
       spawn do
         # Watches static files
         @static_watcher.watch do
-          call "change", ast
+          call "change", "", ast
         end
       end
 
@@ -191,11 +191,11 @@ module Mint
 
       @error = nil
 
-      call "change", ast
+      call "change", "", ast
     rescue error : Error
       @error = error
 
-      call "change", error
+      call "change", "", error
     end
 
     def format(file)
@@ -209,27 +209,27 @@ module Mint
       check!
       @error = nil
 
-      call "change", ast
+      call "change", file, ast
     rescue error : Error
       @error = error
 
-      call "change", error
+      call "change", file, error
     end
 
     def rename_file(old_file, new_file)
       old_path = normalize_path(old_file)
       new_path = normalize_path(new_file)
 
-      @cache[new_path] = old_path
+      @cache[new_path] = @cache[old_path]
       @cache.delete(old_path)
     end
 
-    def delete_file(old_file, new_file)
-      @cache.delete(old_path)
+    def delete_file(file)
+      @cache.delete(normalize_path(file))
 
       update_cache
     end
-    
+
     private def normalize_path(file)
       Path[file].normalize.to_s
     end
@@ -257,8 +257,8 @@ module Mint
       @type_checker.check
     end
 
-    private def call(event, arg)
-      @event_handlers[event]?.try(&.each(&.call(arg)))
+    private def call(event, path, arg)
+      @event_handlers[event]?.try(&.each(&.call(path, arg)))
     end
 
     private def reset_cache

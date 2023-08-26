@@ -35,6 +35,14 @@ module LSP
       }.to_json)
     end
 
+    def send_notification(method, params)
+      send({
+        "jsonrpc" => "2.0",
+        "method"  => method,
+        "params"  => params,
+      }.to_json)
+    end
+
     def send_response(id, result)
       send({
         "jsonrpc" => "2.0",

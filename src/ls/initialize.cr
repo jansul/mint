@@ -45,7 +45,7 @@ module Mint
         execute_command_provider =
           LSP::ExecuteCommandOptions.new(commands: %w[])
 
-        file_options =  LSP::FileOperationRegistrationOptions.new(
+        file_options = LSP::FileOperationRegistrationOptions.new(
           filters: [
             LSP::FileOperationFilter.new(
               pattern: LSP::FileOperationPattern.new(

@@ -31,7 +31,7 @@ module Mint
 
       def execute(server)
         workspace = server.workspace!
-        
+
         contents =
           if error = workspace.error
             # If the workspace has an error we cannot really
@@ -41,6 +41,8 @@ module Mint
               "Cannot provide hover data because of an error:\n",
               "```\n#{error.to_terminal}\n```",
             ]
+
+            return nil
           else
             # We get the stack of nodes under the cursor
             stack =

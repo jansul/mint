@@ -42,5 +42,18 @@ module LSP
     #
     # @since 3.16.0
     property data : String?
+
+    def initialize(
+      @range,
+      @code,
+      @severity = nil,
+      @code_description = nil,
+      @source = nil,
+      @message = nil,
+      @tags = nil,
+      @related_information = nil,
+      @data = nil
+    )
+    end
   end
 end

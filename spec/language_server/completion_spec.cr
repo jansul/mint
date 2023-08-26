@@ -23,7 +23,7 @@ describe "Language Server Completion" do
           id:      0,
           method:  "initialize",
           message: {
-            rootUri: "file://#{workspace.root_path}",
+            rootUri:      "file://#{workspace.root_path}",
             capabilities: {
               textDocument: {
                 completion: {
@@ -36,13 +36,14 @@ describe "Language Server Completion" do
           },
         },
         {
-        id:      1,
-        method:  "textDocument/completion",
-        message: {
-          textDocument: {uri: workspace.file_path("test.mint")},
-          position:     {line: 2, character: 4},
+          id:      1,
+          method:  "textDocument/completion",
+          message: {
+            textDocument: {uri: workspace.file_path("test.mint")},
+            position:     {line: 2, character: 4},
+          },
         },
-      }])
+      ])
     end
   end
 
@@ -59,7 +60,7 @@ describe "Language Server Completion" do
         }
       }
       MINT
-      
+
       # TODO: Assert
       result =
         lsp([
@@ -67,7 +68,7 @@ describe "Language Server Completion" do
             id:      0,
             method:  "initialize",
             message: {
-              rootUri: "file://#{workspace.root_path}",
+              rootUri:      "file://#{workspace.root_path}",
               capabilities: {
                 textDocument: {
                   completion: {

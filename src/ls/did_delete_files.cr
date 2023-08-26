@@ -1,18 +1,21 @@
 module Mint
-    module LS
-      class DidDeleteFiles < LSP::NotificationMessage
-        property params : LSP::DidChangeTextDocumentParams
-  
-        def execute(server)
+  module LS
+    class DidDeleteFiles < LSP::NotificationMessage
+      property params : LSP::DeleteFilesParams
+
+      def execute(server)
+        workspace =
+          server.workspace!
+
+        params.files.each do |file|
           uri =
-            URI.parse(params.text_document.uri)
-  
-          workspace =
-            server.workspace!
-  
-          workspace.update(params.content_changes.first.text, uri.path)
+            URI.parse(file.uri)
+
+          workspace.delete_file(uri.path)
+
+          server.log("Deleted #{uri.path}")
         end
       end
     end
   end
-  
+end

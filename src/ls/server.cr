@@ -17,12 +17,85 @@ module Mint
       method "textDocument/didChange", DidChange
       method "textDocument/hover", Hover
 
+      method "workspace/didDeleteFiles", DidDeleteFiles
+      method "workspace/didRenameFiles", DidRenameFiles
+
       property params : LSP::InitializeParams? = nil
 
-      property workspace : Workspace? = nil
+      property errors = {} of String => Error
 
-      def workspace! : Workspace 
-        workspace || raise "Language server has not initialized workspace"
+      @workspace : Workspace? = nil
+
+      def workspace! : Workspace
+        @workspace || raise "Language server has not initialized workspace"
+      end
+
+      def workspace=(@workspace)
+        log("Workspace has been set")
+
+        workspace!.on "change" do |path, result|
+          case result
+          when Ast
+            log("Something has changed!  #{result}")
+
+            publish_diagnostics_params = LSP::PublishDiagnosticsParams.new(
+              uri: "file://#{path}",
+              diagnostics: [] of LSP::Diagnostic
+            )
+
+            send_notification(
+              method: "textDocument/publishDiagnostics",
+              params: publish_diagnostics_params)
+          when Error
+            log("There has been an error #{path} #{result}")
+
+            result.locals.each do |key, value|
+              case value
+              when String
+                log("#{key}: Type is String ")
+              when Ast::Node
+                log("#{key}: Type is Ast::Node ")
+
+                range = LSP::Range.new(
+                  start: LSP::Position.new(
+                    line: value.location.start[0] - 1,
+                    character: value.location.start[1]
+                  ),
+                  end: LSP::Position.new(
+                    line: value.location.end[0] - 1,
+                    character: value.location.end[1]
+                  )
+                )
+
+                diagnostics = [] of LSP::Diagnostic
+                diagnostics << LSP::Diagnostic.new(
+                  range: range,
+                  severity: LSP::DiagnosticSeverity::Error,
+                  code: 1234,
+                  source: "mint",
+                  message: result.message
+                )
+
+                publish_diagnostics_params = LSP::PublishDiagnosticsParams.new(
+                  uri: "file://#{path}",
+                  diagnostics: diagnostics
+                )
+
+                send_notification(
+                  method: "textDocument/publishDiagnostics",
+                  params: publish_diagnostics_params)
+              when TypeChecker::Checkable
+                log("#{key}: Type is TypeChecker::Checkable ")
+              when Array(TypeChecker::Checkable)
+                log("#{key}: Type is Array(TypeChecker::Checkable) ")
+              when Tuple(Ast::Node, Int32 | Array(Int32))
+                log("#{key}: Type is Tuple(Ast::Node, Int32 | Array(Int32))")
+              when Array(String)
+                log("#{key}: Type is Array(String)")
+              end
+            end
+          end
+        end
       end
 
       # Logs the given stack.
