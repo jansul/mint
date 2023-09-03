@@ -4,7 +4,16 @@ module Mint
     class Definition < LSP::RequestMessage
       property params : LSP::TextDocumentPositionParams
 
-      def execute(server) : Array(LSP::LocationLink) | Array(LSP::Location) | LSP::Location | Nil
+      struct DefinitionLink
+        property source : Ast::Node
+        property target : Ast::Node
+        property parent : Ast::Node
+
+        def initialize(@source, @target, @parent)
+        end
+      end
+
+      def execute(server) : Array(LSP::LocationLink | LSP::Location) | LSP::Location | Nil
         workspace = server.workspace!
 
         unless workspace.error
@@ -20,22 +29,81 @@ module Mint
               .try(&.definition)
               .try(&.link_support) || false
 
-          links = definition(node, workspace, stack)
+          storage_path =
+            server
+              .params
+              .try(&.initialization_options)
+              .try(&.storage_path)
 
-          case links
-          when Array(LSP::LocationLink)
-            # Return a singular `LSP::Location` if possible
-            return to_lsp_location(links.first) if !has_link_support && links.size == 1
+          link = definition(node, workspace, stack)
 
-            return links.map { |link| to_lsp_location(link) } if !has_link_support
+          return if link.nil?
 
-            # Prefer nil rather than an empty array
-            links unless links.empty?
-          when LSP::LocationLink
-            return to_lsp_location(links) if !has_link_support
+          links = link.is_a?(Array) ? link : [link]
 
-            [links]
+          combined = links.map do |link|
+            target_is_core =
+              Core.ast.nodes.includes?(link.target) ||
+                Core.ast.nodes.includes?(link.parent)
+
+            target_uri = if target_is_core
+                           # Do not link to core files unless they are stored on disk
+                           next unless storage_path
+
+                           core_path = Path[storage_path, VERSION, "core"]
+
+                           server.log(link.target.location.filename, 4)
+
+                           path = Path[core_path, link.target.location.filename]
+                           path.to_uri.to_s
+                         else
+                           "file://#{link.target.location.filename}"
+                         end
+
+            if has_link_support
+              LSP::LocationLink.new(
+                origin_selection_range: to_lsp_range(link.source.location),
+                target_uri: target_uri,
+                target_range: to_lsp_range(link.parent.location),
+                target_selection_range: to_lsp_range(link.target.location)
+              )
+            else
+              LSP::Location.new(
+                range: to_lsp_range(link.target.location),
+                uri: target_uri,
+              )
+            end
           end
+
+          compacted = combined.compact
+
+          # Prefer nil rather than an empty array
+          return nil if compacted.empty?
+
+          compacted
+
+          # Return a singular `LSP::Location` if possible
+          # return compacted.first if compacted.size == 1
+
+          # case links
+          # when Array(DefinitionLink)
+          #   # Prefer nil rather than an empty array
+          #   return nil if links.empty?
+
+          #   unless has_link_support
+          #     # Return a singular `LSP::Location` if possible
+          #     return links.first.to_lsp_location(server) if links.size == 1
+
+          #     # Otherwise return an array
+          #     return links.map(&.to_lsp_location(server))
+          #   end
+
+          #   return links.map(&.to_lsp_location_link(server))
+          # when DefinitionLink
+          #   return links.to_lsp_location(server) if !has_link_support
+
+          #   [links.to_lsp_location_link(server)]
+          # end
         end
       end
 
@@ -75,25 +143,37 @@ module Mint
         )
       end
 
-      def to_lsp_location(location_link : LSP::LocationLink) : LSP::Location
-        LSP::Location.new(
-          range: location_link.target_selection_range,
-          uri: location_link.target_uri,
-        )
-      end
-
       # Returns a `LSP::LocationLink` that links from *source* to the *target* node
       #
       # The *parent* node is used to provide the full range for the *target* node.
       # For example, for a function, *target* would be the function name, and *parent*
       # would be the whole node, including function body and any comments
-      def location_link(source : Ast::Node, target : Ast::Node, parent : Ast::Node) : LSP::LocationLink
-        LSP::LocationLink.new(
-          origin_selection_range: to_lsp_range(source.location),
-          target_uri: "file://#{target.location.filename}",
-          target_range: to_lsp_range(parent.location),
-          target_selection_range: to_lsp_range(target.location)
-        )
+      def location_link(source : Ast::Node, target : Ast::Node, parent : Ast::Node) : DefinitionLink
+        DefinitionLink.new(source, target, parent)
+
+        # target_uri = if Core.ast.nodes.includes?(target)
+        #   "file://#{target.location.filename}"
+        # else
+        #   "file://#{target.location.filename}"
+        # end
+
+        # target_uri =
+        # .try(&.initialization_options)
+        # .try(&.storage_path)
+        # .try do |storage_path|
+        #   FileUtils.mkdir_p storage_path
+
+        #   Dir.cd(storage_path) do
+        #     Core.files.each do |file|
+        #       dest_path =
+        #         Path[storage_path, "core", VERSION, file.path]
+
+        # LSP::LocationLink.new(
+        #   origin_selection_range: to_lsp_range(source.location),
+        #   target_uri: "file://#{target.location.filename}",
+        #   target_range: to_lsp_range(parent.location),
+        #   target_selection_range: to_lsp_range(target.location)
+        # )
       end
     end
   end

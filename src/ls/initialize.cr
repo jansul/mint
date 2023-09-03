@@ -1,7 +1,7 @@
 module Mint
   module LS
     class Initialize < LSP::RequestMessage
-      property params : LSP::InitializeParams
+      property params : LSP::InitializeParams(InitializationOptions)
 
       def execute(server)
         server.params = params
@@ -13,6 +13,29 @@ module Mint
 
             Workspace.new(workspace_uri.path.to_s)
               .tap(&.update_cache)
+          end
+
+        params
+          .try(&.initialization_options)
+          .try(&.storage_path)
+          .try do |storage_path|
+            core_path = Path[storage_path, VERSION, "core"]
+
+            # Create destination folder
+            FileUtils.mkdir_p(core_path)
+
+            Core.files.each do |file|
+              file_path = Path[core_path, file.path.lchop]
+
+              FileUtils.mkdir_p File.dirname(file_path)
+
+              file.rewind
+              File.write(file_path, file)
+
+              server.log("Writing to path: #{file_path}")
+            end
+
+            server.log("Core files written to storage path: #{storage_path}")
           end
 
         completion_provider =

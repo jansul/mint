@@ -20,7 +20,7 @@ module Mint
       method "workspace/didDeleteFiles", DidDeleteFiles
       method "workspace/didRenameFiles", DidRenameFiles
 
-      property params : LSP::InitializeParams? = nil
+      property params : LSP::InitializeParams(InitializationOptions)? = nil
 
       property errors = {} of String => Error
 
@@ -73,7 +73,7 @@ module Mint
                   severity: LSP::DiagnosticSeverity::Error,
                   code: 1234,
                   source: "mint",
-                  message: result.message
+                  message: "Expected closing parentheses"
                 )
 
                 publish_diagnostics_params = LSP::PublishDiagnosticsParams.new(

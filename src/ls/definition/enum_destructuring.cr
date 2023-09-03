@@ -6,8 +6,6 @@ module Mint
         return unless enum_node =
                         workspace.ast.enums.find(&.name.value.==(name.value))
 
-        return if Core.ast.enums.includes?(enum_node)
-
         case
         when cursor_intersects?(name)
           location_link name, enum_node.name, enum_node

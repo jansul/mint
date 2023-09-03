@@ -1,5 +1,5 @@
 module LSP
-  struct InitializeParams
+  struct InitializeParams(T)
     include JSON::Serializable
 
     # The process Id of the parent process that started the server. Is null if
@@ -22,6 +22,10 @@ module LSP
 
     # The initial trace setting. If omitted trace is disabled ('off').
     property trace : String?
+
+    # User provided initialization options.
+    @[JSON::Field(key: "initializationOptions")]
+    property initialization_options : T?
 
     # The workspace folders configured in the client when the server starts.
     # This property is only available if the client supports workspace folders.

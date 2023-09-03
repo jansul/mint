@@ -14,8 +14,6 @@ module Mint
                             .records
                             .find(&.name.value.==(lhs.name))
 
-          return if Core.ast.records.includes?(record)
-
           return unless record_definition_field = record
                           .fields
                           .find(&.key.value.==(node.field.value))

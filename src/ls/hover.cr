@@ -38,11 +38,9 @@ module Mint
             # provide and hover information, so we just provide
             # the error instead.
             [
-              "Cannot provide hover data because of an error:\n",
+
               "```\n#{error.to_terminal}\n```",
             ]
-
-            return nil
           else
             # We get the stack of nodes under the cursor
             stack =

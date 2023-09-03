@@ -6,7 +6,6 @@ module Mint
         when Ast::ModuleAccess
           links = workspace.ast.modules
             .select(&.name.value.==(node.value))
-            .reject(&.in?(Core.ast.nodes))
             .sort_by!(&.input.file)
             .map do |mod|
               location_link node, mod.name, mod
@@ -24,8 +23,6 @@ module Mint
         if found.nil? && (next_node = stack[1])
           return definition(next_node, workspace, stack)
         end
-
-        return if Core.ast.nodes.includes?(found)
 
         case found
         when Ast::Store, Ast::Enum, Ast::Component, Ast::RecordDefinition
