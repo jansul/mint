@@ -11,5 +11,13 @@ module LSP
     # Capabilities specific to the `textDocument/semanticTokens` request.
     @[JSON::Field(key: "semanticTokens")]
     property semantic_tokens : SemanticTokensClientCapabilities?
+
+    # Capabilities specific to the `textDocument/semanticTokens` request.
+    @[JSON::Field(key: "semanticTokens")]
+    property semantic_tokens : SemanticTokensClientCapabilities?
+
+    #  Capabilities specific to the `textDocument/documentSymbol` request.
+    @[JSON::Field(key: "documentSymbol")]
+    property document_symbol : DocumentSymbolClientCapabilities?
   end
 end

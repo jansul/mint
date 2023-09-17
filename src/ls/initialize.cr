@@ -66,7 +66,7 @@ module Mint
             document_formatting_provider: true,
             document_highlight_provider: false,
             workspace_symbol_provider: false,
-            document_symbol_provider: false,
+            document_symbol_provider: true,
             type_definition_provider: false,
             implementation_provider: false,
             folding_range_provider: true,

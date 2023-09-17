@@ -16,6 +16,7 @@ module Mint
       method "textDocument/definition", Definition
       method "textDocument/didChange", DidChange
       method "textDocument/hover", Hover
+      method "textDocument/documentSymbol", DocumentSymbol
 
       property params : LSP::InitializeParams? = nil
 

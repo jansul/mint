@@ -105,8 +105,7 @@ module LSP
       # sending an "exit" lifecycle message
       exit(1)
     rescue error
-      log(error.to_s)
-      error.backtrace?.try(&.each { |item| log(item) })
+      show_message_request(error.inspect_with_backtrace, 1)
     end
   end
 end
