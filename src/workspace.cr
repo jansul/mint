@@ -23,6 +23,7 @@ module Mint
       root = File.dirname(path)
 
       loop do
+        puts root
         raise "Invalid workspace!" if root == "." || root == "/"
 
         if File.exists?(Path[root, "mint.json"])
