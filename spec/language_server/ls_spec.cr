@@ -25,6 +25,7 @@ Dir
           when "file"
             workspace.file match[2].strip, text.strip
           when "request"
+            puts text
             requests << clean_json(workspace, text)
           when "response"
             responses << clean_json(workspace, text)
