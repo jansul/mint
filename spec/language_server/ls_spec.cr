@@ -40,6 +40,10 @@ Dir
 
         actual_responses = lsp_json(requests)
 
+        actual_responses.each do |actual_response|
+          puts actual_response
+        end
+
         responses.each do |expected_response|
           expected_id = JSON.parse(expected_response)["id"].as_i
 
