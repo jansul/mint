@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 def clean_json(workspace : Workspace, path : String)
-  path.strip.gsub("\#{root_path}", workspace.root_path.dump_unquoted)
+  path.strip.gsub("\#{root_path}", Path[workspace.root_path].to_posix.to_s)
 end
 
 Dir
