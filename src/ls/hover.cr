@@ -33,7 +33,9 @@ module Mint
         # Get the URI of the text document
         uri =
           URI.parse(params.text_document.uri)
-
+        puts uri
+        puts uri.path
+        
         # Get the workspace associated with the text document
         # this could take a while because the workspace parses
         # and type checks all of its source files.
