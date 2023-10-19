@@ -18,7 +18,7 @@ module Mint
     getter file : File
 
     def initialize(input : String, path : String)
-      @file = File.new(input, path)
+      @file = File.new(input, Path[path].to_posix.to_s)
       @input = input.chars
     end
 
