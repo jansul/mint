@@ -37,6 +37,12 @@ jobs:
           mkdir build
           crystal build src/mint.cr -o build/mint-${GITHUB_REF_SLUG}-${{ matrix.os }} --release
 
+      - if: startsWith(matrix.os, 'windows')
+        name: Build binary (windows)
+        run: |
+          mkdir build
+          crystal build src/mint.cr -o build/mint-${GITHUB_REF_SLUG}-${{ matrix.os }} --release
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
